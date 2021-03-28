@@ -1,34 +1,51 @@
-import { Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import { StepLabel, Typography, Stepper, Step } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
 import DadosEntrega from "./DadosEntrega";
 import DadosPessoais from "./DadosPessoais";
 import DadosUsuario from "./DadosUsuario";
 
 function FormularioCadastro({ aoEnviar, validarCPF }) {
   const [etapaAtual, setEtapaAtual] = useState(0);
-
-
-    function proximaEtapa(){
-        setEtapaAtual(etapaAtual+1);
+  const [dadosColetados, setDados] = useState({});
+  useEffect(() => {
+    if (etapaAtual === formularios.length - 1) {
+      aoEnviar(dadosColetados);
     }
+  });
 
+  const formularios = [
+    <DadosUsuario aoEnviar={coletarDados} />,
+    <DadosPessoais aoEnviar={coletarDados} validarCPF={validarCPF} />,
+    <DadosEntrega aoEnviar={coletarDados} />,
+    <Typography variant="h5" align="center">Obrigado pelo cadastro!</Typography>,
+  ];
 
-  function formularioAtual(etapa) {
-    switch (etapa) {
-      case 0:
-        return <DadosUsuario aoEnviar={proximaEtapa} />;
-      case 1:
-        return <DadosPessoais aoEnviar={proximaEtapa} validarCPF={validarCPF} />;
-      case 2:
-        return <DadosEntrega aoEnviar={aoEnviar} />;
-      default:
-        return <Typography>Erro ao selecionar formulário</Typography>;
-    }
+  function coletarDados(dados) {
+    setDados({ ...dadosColetados, ...dados });
+    proximaEtapa();
+  }
+
+  function proximaEtapa() {
+    setEtapaAtual(etapaAtual + 1);
   }
 
   return (
     <>
-      {formularioAtual(etapaAtual)}
+      <Stepper activeStep={etapaAtual}>
+        <Step>
+          <StepLabel>Login</StepLabel>
+        </Step>
+        <Step>
+          <StepLabel>Pessoal</StepLabel>
+        </Step>
+        <Step>
+          <StepLabel>Entrega</StepLabel>
+        </Step>
+        <Step>
+          <StepLabel>Finalização</StepLabel>
+        </Step>
+      </Stepper>
+      {formularios[etapaAtual]}
     </>
   );
 }
