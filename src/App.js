@@ -11,13 +11,13 @@ class App extends Component {
         <Typography variant="h3" component="h1" align="center">
           Formulário de Cadastro
         </Typography>
-        <FormularioCadastro onSubmit={onSubmitForm} validarCPF={validarCPF} />
+        <FormularioCadastro aoEnviar={aoEnviarForm} validarCPF={validarCPF} />
       </Container>
     );
   }
 }
 
-function onSubmitForm(dados) {
+function aoEnviarForm(dados) {
   console.log(dados);
 }
 
